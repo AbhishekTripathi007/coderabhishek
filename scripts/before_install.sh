@@ -4,8 +4,7 @@
 cd /home/ec2-user/server
 
 #_Update_&_Set_Node_Version
-sudo yum install https://rpm.nodesource.com/pub_20.x/nodistro/repo/nodesource-release-nodistro-1.noarch.rpm -y
-sudo yum install nodejs -y --setopt=nodesource-nodejs.module_hotfixes=1
+curl -sL https://rpm.nodesource.com/setup_14.x | sudo -E bash -
 
 #_Download_Node_&NPM
 yum -y install nodejs npm
