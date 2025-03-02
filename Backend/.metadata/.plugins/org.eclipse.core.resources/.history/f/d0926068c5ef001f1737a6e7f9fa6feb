@@ -1,0 +1,31 @@
+package com.coderabhishek.blog.controller;
+
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.coderabhishek.blog.model.TestMongo;
+import com.coderabhishek.blog.service.TestService;
+
+@RestController
+@RequestMapping("/blog")
+public class TestController {
+	public final TestService testService;
+
+	public TestController(TestService tesService) {
+		this.testService = tesService;
+	}
+
+	@GetMapping("/getAll")
+	public List<TestMongo> getAll() {
+		return testService.getAll();
+	}
+
+	@PostMapping("/create")
+	public TestMongo createTest(TestMongo test) {
+		return testService.createTest(test);
+	}
+}

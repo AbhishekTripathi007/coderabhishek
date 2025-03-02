@@ -1,0 +1,17 @@
+# Application Name
+spring.application.name=BLOG
+# Server Port
+server.port=8000
+
+# MongoDB Configuration
+spring.data.mongodb.uri=mongodb://localhost:27017/blog
+spring.data.mongodb.auto-index-creation=true
+spring.data.mongodb.repositories.type=auto
+
+# Eureka Client Configuration
+eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka
+#eureka.instance.hostname=localhost
+eureka.instance.prefer-ip-address=true
+
+#Colored logs
+spring.output.ansi.enabled=always

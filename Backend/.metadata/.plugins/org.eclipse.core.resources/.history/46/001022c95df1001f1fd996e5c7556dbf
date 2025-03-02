@@ -1,0 +1,35 @@
+# Use the official OpenJDK 21 image (Debian-based) for the build stage
+FROM eclipse-temurin:21-jdk AS builder
+
+WORKDIR /app
+
+# Copy build files and source code
+COPY pom.xml mvnw ./
+COPY .mvn .mvn
+COPY src src
+
+# Build the application
+RUN ./mvnw clean package -DskipTests
+
+# ----------------------
+# PRODUCTION STAGE
+# ----------------------
+# Use a minimal, secure base image for production
+FROM eclipse-temurin:21-jre
+
+WORKDIR /app
+
+# Copy the built JAR file from the builder stage
+COPY --from=builder /app/target/eureka-server-0.0.1-SNAPSHOT.jar app.jar
+
+EXPOSE 8761
+
+# Set JVM options for performance
+ENV JAVA_OPTS="-Xms256m -Xmx512m -Djava.security.egd=file:/dev/./urandom"
+
+# Add a health check to ensure the Eureka server is running
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:8761 || exit 1
+
+# Run the application with the production profile
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar --spring.profiles.active=prod"]

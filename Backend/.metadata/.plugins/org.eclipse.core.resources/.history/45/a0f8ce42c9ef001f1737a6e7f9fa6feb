@@ -1,0 +1,15 @@
+package com.coderabhishek.blog.model;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.Data;
+
+@Data
+@Document(collection = "test", value="")
+public class TestMongo {
+	@Id
+	String id;
+	String name;
+	String mobileNo;
+}

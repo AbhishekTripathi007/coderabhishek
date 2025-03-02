@@ -1,0 +1,34 @@
+package com.coderabhishek.blog.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
+
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+
+@Configuration
+public class MongoConfig {
+
+    @Bean
+    public MongoTemplate mongoTemplate() {
+        // Create a MongoClient connected to localhost on the blog database
+        MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017/blog");
+
+        // Create a MongoMappingContext
+        MongoMappingContext context = new MongoMappingContext();
+
+        // Create a MappingMongoConverter without the _class field
+        MappingMongoConverter converter = new MappingMongoConverter(
+                MongoTemplate.noOpDbRefResolver(),
+                context
+        );
+        converter.setTypeMapper(new DefaultMongoTypeMapper(null)); // Remove _class field
+
+        // Return the configured MongoTemplate
+        return new MongoTemplate(mongoClient, "blog", converter);
+    }
+}

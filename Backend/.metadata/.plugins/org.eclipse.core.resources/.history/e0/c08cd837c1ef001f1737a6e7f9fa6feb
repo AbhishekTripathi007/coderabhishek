@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: auth
+          url: lb://auth
+          predicates:
+            - Path=/auth/**
+        - id: BLOG
+          url: lb://blog
+          predicates:
+            - Path=/blog/**
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin
+        - DedupeResponseHeader=Access-Control-Allow-Methods
+        - DedupeResponseHeader=Access-Control-Allow-Headers
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - '*'
+            allowedMethods: 'GET, PUT, POST, DELETE'
+            allowedHeaders: 'Content-Type, Authorization'
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    hostname: localhost
+    prefer-ip-address: true

@@ -1,0 +1,20 @@
+server:
+  port: 8000
+    
+spring:
+  data:
+    mongodb:
+      url: localhost:27017/blog
+  application:
+    name: blog
+    
+      
+eureka:
+  client:
+    serviceUrl: 
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    
+      

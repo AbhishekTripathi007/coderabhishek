@@ -1,0 +1,24 @@
+# Use a lightweight Node.js image for build
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+# Copy package.json and package-lock.json (if available) and install dependencies
+COPY package.json package-lock.json ./
+RUN npm ci --legacy-peer-deps
+
+# Copy the source code and build the application
+COPY . .
+RUN npm run build
+
+# Serve the build using a lightweight web server (nginx)
+FROM nginx:stable-alpine
+
+# Copy the build output to nginx's html directory
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Expose port 80 for the server
+EXPOSE 80
+
+# Start nginx server
+CMD ["nginx", "-g", "daemon off;"]

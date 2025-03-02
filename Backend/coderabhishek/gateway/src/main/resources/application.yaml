@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: GATEWAY
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: BLOG
+          uri: lb://BLOG
+          predicates:
+            - Path=/blog/**
+    webflux:
+      cors:
+        mappings:
+          "[/**]":
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+    output:
+      ansi:
+        enabled: always
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: TRACE
+    reactor.netty: DEBUG

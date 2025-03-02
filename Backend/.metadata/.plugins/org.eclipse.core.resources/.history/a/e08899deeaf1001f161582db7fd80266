@@ -1,0 +1,27 @@
+# Ignore Maven build files and directories
+
+# Ignore version control files
+.git
+.gitignore
+
+# Ignore IDE-specific files
+*.iml
+.idea/
+.vscode/
+
+# Ignore OS-specific files
+*.DS_Store
+*.log
+Thumbs.db
+
+# Ignore environment files
+.env
+
+# Ignore unnecessary files
+node_modules/
+*.bak
+*.tmp
+
+# Ignore all except the target directory
+*
+!../../target/eureka-1.0.jar

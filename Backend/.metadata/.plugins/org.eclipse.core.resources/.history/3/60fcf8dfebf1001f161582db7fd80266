@@ -1,0 +1,22 @@
+# ----------------------
+# PRODUCTION STAGE ONLY
+# ----------------------
+# Use a minimal, secure base image for production
+FROM eclipse-temurin:21-jre
+
+WORKDIR /app
+
+# Copy the pre-built JAR file into the container
+COPY target/gateway-1.0.jar app.jar
+
+EXPOSE 8080
+
+# Set JVM options for performance
+ENV JAVA_OPTS="-Xms256m -Xmx512m -Djava.security.egd=file:/dev/./urandom"
+
+# Add a health check to ensure the Eureka server is running
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:8080 || exit 1
+
+# Run the application with the production profile
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar --spring.profiles.active=prod"]

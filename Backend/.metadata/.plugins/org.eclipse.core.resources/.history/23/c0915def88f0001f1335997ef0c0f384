@@ -1,0 +1,5 @@
+package com.coderabhishek.blog.config;
+
+public class WebConfig {
+
+}
