@@ -3,7 +3,7 @@ import "./App.css";
 import ChatApp from "./component/ChatApp";
 import Blog from "./component/blog/Blog";
 import Dashboard from "./component/dashboard/Dashboard";
-import MyPortfolio from "./component/portfolio/MyPortfolio";
+import MyPortfolio from "./component/myportfolio/MyPortfolio";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {

@@ -1,3 +1,0 @@
-spring.application.name=blog
-spring.data.mongodb.auto-index-creation=true
-spring.data.mongodb.repositories.type=none
