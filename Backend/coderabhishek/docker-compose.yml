@@ -3,7 +3,7 @@ services:
   react-frontend:
     image: react-frontend:1.0
     build:
-      context: ../../Frontend/coderabhishek
+      context: ../../Frontend/coder-abhishek
       dockerfile: DockerFile
     container_name: react-frontend
     ports:
