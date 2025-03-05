@@ -21,7 +21,7 @@ jobs:
 
       - name: Build with Maven
         run: |
-          cd coderabhishek/Backend/coderabhishek
+          cd Backend/coderabhishek
           mvn clean package -DskipTests  # Skip tests for faster builds, remove if you want tests to run
 
       - name: Set up Docker Buildx
@@ -32,7 +32,7 @@ jobs:
 
       - name: Build & Push Services to Docker Hub
         run: |
-          cd coderabhishek/Backend/coderabhishek
+          cd Backend/coderabhishek
           docker-compose build
           
           docker tag react-frontend:1.0 coderabhishek/react-frontend:latest
