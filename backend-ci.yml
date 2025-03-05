@@ -1,0 +1,34 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches:
+      - main  # Change to your main development branch if different
+  pull_request:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'  # You can change this to match your JDK version
+          java-version: '21'
+
+      - name: Build with Maven
+        run: |
+          cd coderabhishek/backend
+          mvn clean package -DskipTests  # Skip tests for faster builds, remove if you want tests to run
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Run Docker Compose
+        run: |
+          cd coderabhishek/backend
+          docker compose up -d  # Runs in detached mode
