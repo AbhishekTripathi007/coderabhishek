@@ -40,14 +40,12 @@ jobs:
 
           docker images  # Debugging step to list built images
 
-          # Tag images correctly for pushing under the same repo
-          docker tag backend_coderabhishek-react-frontend gorakshdocker/coderabhishek:react-frontend
-          docker tag backend_coderabhishek-eureka gorakshdocker/coderabhishek:eureka
-          docker tag backend_coderabhishek-gateway gorakshdocker/coderabhishek:gateway
-          docker tag backend_coderabhishek-auth gorakshdocker/coderabhishek:auth
-          docker tag backend_coderabhishek-blog gorakshdocker/coderabhishek:blog
+          docker tag react-frontend:1.0 gorakshdocker/coderabhishek:react-frontend
+          docker tag eureka:1.0 gorakshdocker/coderabhishek:eureka
+          docker tag gateway:1.0 gorakshdocker/coderabhishek:gateway
+          docker tag auth:1.0 gorakshdocker/coderabhishek:auth
+          docker tag blog:1.0 gorakshdocker/coderabhishek:blog
 
-          # Push all images to the same repo with different tags
           docker push gorakshdocker/coderabhishek:react-frontend
           docker push gorakshdocker/coderabhishek:eureka
           docker push gorakshdocker/coderabhishek:gateway
