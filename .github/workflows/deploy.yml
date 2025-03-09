@@ -41,14 +41,12 @@ jobs:
           docker images  # Debugging step to list built images
 
           docker tag react-frontend:1.0 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:react-frontend
-          docker tag mongo:6.0 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:mongo
           docker tag eureka:1.0 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:eureka
           docker tag gateway:1.0 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:gateway
           docker tag auth:1.0 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:auth
           docker tag blog:1.0 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:blog
 
           docker push ${{ secrets.DOCKER_USERNAME }}/coderabhishek:react-frontend
-          docker push ${{ secrets.DOCKER_USERNAME }}/coderabhishek:mongo
           docker push ${{ secrets.DOCKER_USERNAME }}/coderabhishek:eureka
           docker push ${{ secrets.DOCKER_USERNAME }}/coderabhishek:gateway
           docker push ${{ secrets.DOCKER_USERNAME }}/coderabhishek:auth
@@ -66,7 +64,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/react-frontend:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/mongo:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/eureka:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/gateway:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/auth:latest
