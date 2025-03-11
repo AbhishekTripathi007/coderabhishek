@@ -69,5 +69,8 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/auth:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/blog:latest
 
-            docker-compose down
-            docker-compose up -d
+            docker run -d --name react-frontend -p 8761:8761 goraksh/react-frontend:latest
+            docker run -d --name eureka -p 8761:8761 goraksh/eureka:latest
+            docker run -d --name gateway -p 8761:8761 goraksh/gateway:latest
+            docker run -d --name auth -p 8761:8761 goraksh/auth:latest
+            docker run -d --name blog -p 8761:8761 goraksh/blog:latest
