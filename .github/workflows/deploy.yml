@@ -63,14 +63,19 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/react-frontend:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/eureka:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/gateway:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/auth:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/blog:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/coderabhishek:react-frontend:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/coderabhishek:eureka:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/coderabhishek:gateway:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/coderabhishek:auth:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/coderabhishek:blog:latest
 
-            docker run -d --name react-frontend -p 8761:8761 goraksh/react-frontend:latest
-            docker run -d --name eureka -p 8761:8761 goraksh/eureka:latest
-            docker run -d --name gateway -p 8761:8761 goraksh/gateway:latest
-            docker run -d --name auth -p 8761:8761 goraksh/auth:latest
-            docker run -d --name blog -p 8761:8761 goraksh/blog:latest
+            docker stop react-frontend eureka gateway auth blog || true
+            docker rm react-frontend eureka gateway auth blog || true
+
+            docker network create mynetwork || true
+
+            docker run -d --name eureka --network mynetwork -p 8761:8761 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:eureka
+            docker run -d --name gateway --network mynetwork -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:gateway
+            docker run -d --name auth --network mynetwork -p 8081:8081 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:auth
+            docker run -d --name blog --network mynetwork -p 8082:8082 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:blog
+            docker run -d --name react-frontend --network mynetwork -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:react-frontend
