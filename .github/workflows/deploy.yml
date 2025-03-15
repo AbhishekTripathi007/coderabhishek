@@ -53,29 +53,37 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/coderabhishek:blog
 
   deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/coderabhishek:react-frontend:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/coderabhishek:eureka:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/coderabhishek:gateway:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/coderabhishek:auth:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/coderabhishek:blog:latest
+      needs: build-and-push
+      runs-on: ubuntu-latest
+      steps:
+        - name: Deploy to EC2
+          uses: appleboy/ssh-action@v0.1.7
+          with:
+            host: ${{ secrets.EC2_HOST }}
+            username: ${{ secrets.EC2_USER }}
+            key: ${{ secrets.EC2_SSH_KEY }}
+            script: |
+              # Define all services
+              services=("react-frontend" "eureka" "gateway" "auth" "blog" "res")
 
-            docker stop react-frontend eureka gateway auth blog || true
-            docker rm react-frontend eureka gateway auth blog || true
+              # Pull the latest images
+              for service in "${services[@]}"; do
+                docker pull ${{ secrets.DOCKER_USERNAME }}/coderabhishek/$service:latest
+              done
 
-            docker network create mynetwork || true
+              # Stop and remove existing containers
+              for service in "${services[@]}"; do
+                docker stop $service 2>/dev/null || true
+                docker rm $service 2>/dev/null || true
+              done
 
-            docker run -d --name eureka --network mynetwork -p 8761:8761 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:eureka
-            docker run -d --name gateway --network mynetwork -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:gateway
-            docker run -d --name auth --network mynetwork -p 8081:8081 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:auth
-            docker run -d --name blog --network mynetwork -p 8082:8082 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:blog
-            docker run -d --name react-frontend --network mynetwork -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/coderabhishek:react-frontend
+              # Ensure the Docker network exists
+              docker network create mynetwork 2>/dev/null || true
+
+              # Run containers with auto-restart enabled
+              docker run -d --restart unless-stopped --name eureka --network mynetwork -p 8761:8761 ${{ secrets.DOCKER_USERNAME }}/coderabhishek/eureka:latest
+              docker run -d --restart unless-stopped --name gateway --network mynetwork -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/coderabhishek/gateway:latest
+              docker run -d --restart unless-stopped --name auth --network mynetwork -p 8081:8081 ${{ secrets.DOCKER_USERNAME }}/coderabhishek/auth:latest
+              docker run -d --restart unless-stopped --name blog --network mynetwork -p 8082:8082 ${{ secrets.DOCKER_USERNAME }}/coderabhishek/blog:latest
+              docker run -d --restart unless-stopped --name res --network mynetwork -p 8083:8083 ${{ secrets.DOCKER_USERNAME }}/coderabhishek/res:latest
+              docker run -d --restart unless-stopped --name react-frontend --network mynetwork -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/coderabhishek/react-frontend:latest
