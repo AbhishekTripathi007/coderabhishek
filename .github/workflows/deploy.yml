@@ -64,7 +64,7 @@ jobs:
             key: ${{ secrets.EC2_SSH_KEY }}
             script: |
               # Define all services
-              services=("react-frontend" "eureka" "gateway" "auth" "blog" "res")
+              services=("react-frontend" "eureka" "gateway" "auth" "blog")
 
               # Pull the latest images
               for service in "${services[@]}"; do
