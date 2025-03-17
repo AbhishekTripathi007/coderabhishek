@@ -85,7 +85,7 @@ services:
       - app-network
     depends_on:
       - eureka-server
-      - mongo
+      # - mongo
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
       - MONGO_URI=mongodb://mongo:27017/blog
