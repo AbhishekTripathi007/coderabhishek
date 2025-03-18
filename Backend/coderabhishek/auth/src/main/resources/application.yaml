@@ -4,14 +4,14 @@ server:
 spring:
   data:
     mongodb:
-      url: localhost:27017/blog
+      url: ${MONGO_URI}
   application:
     name: AUTH
       
 eureka:
   client:
     serviceUrl:
-      globalUrl: http://localhost:8761/eureka
+      globalUrl: http://eureka:8761/eureka
       
   instance:
     hostname: localhost
