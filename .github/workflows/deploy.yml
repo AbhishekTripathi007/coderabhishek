@@ -73,7 +73,6 @@ jobs:
               ["gateway"]="8080"
               ["auth"]="8081"
               ["blog"]="8082"
-              ["res"]="8083"
               ["react-frontend"]="3000"
             )
 
@@ -85,12 +84,21 @@ jobs:
 
             echo "🛑 Stopping and removing existing containers..."
             for service in "${!services[@]}"; do
-              docker stop $service 2>/dev/null || true
-              docker rm $service 2>/dev/null || true
+              docker ps -q --filter "name=$service" | grep -q . && docker stop $service
+              docker ps -aq --filter "name=$service" | grep -q . && docker rm $service
             done
 
             echo "🌐 Ensuring the Docker network exists..."
-            docker network create mynetwork 2>/dev/null || true
+            docker network inspect mynetwork >/dev/null 2>&1 || docker network create mynetwork
+
+            # Ensure MONGO_URI is set
+            export MONGO_URI="${{ secrets.MONGO_URI }}"
+            echo "MONGO_URI is set to: $MONGO_URI"
+
+            if [[ -z "$MONGO_URI" ]]; then
+              echo "❌ ERROR: MONGO_URI is not set. Aborting deployment!"
+              exit 1
+            fi
 
             echo "🚀 Running new containers..."
             for service in "${!services[@]}"; do
@@ -109,8 +117,8 @@ jobs:
               cmd="$cmd gorakshdocker/coderabhishek:$service"
 
               # Run the command
+              echo "Running: $cmd"
               eval "$cmd"
             done
-
 
             echo "✅ Deployment completed successfully!"
