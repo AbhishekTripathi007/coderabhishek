@@ -105,20 +105,22 @@ jobs:
               echo "Starting $service on port ${services[$service]}..."
               
               # Base command
-              cmd="docker run -d --restart unless-stopped --name $service \
-                --network mynetwork -p ${services[$service]}:${services[$service]}"
-
+              cmd=(docker run -d --restart unless-stopped --name "$service"
+                  --network mynetwork -p "${services[$service]}:${services[$service]}")
+              
               # Add MONGO_URI only for blog and auth services
               if [[ "$service" == "blog" || "$service" == "auth" ]]; then
-                cmd="$cmd -e MONGO_URI=$MONGO_URI"
+                cmd+=(-e "MONGO_URI=$MONGO_URI")
               fi
 
               # Append the image
-              cmd="$cmd gorakshdocker/coderabhishek:$service"
+              cmd+=("gorakshdocker/coderabhishek:$service")
+
+              # Debugging output
+              echo "Running: ${cmd[*]}"
 
               # Run the command
-              echo "Running: $cmd"
-              eval "$cmd"
+              "${cmd[@]}"
             done
 
             echo "✅ Deployment completed successfully!"
