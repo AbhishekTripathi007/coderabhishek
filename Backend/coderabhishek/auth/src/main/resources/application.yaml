@@ -4,7 +4,7 @@ server:
 spring:
   data:
     mongodb:
-      url: ${MONGO_URI}
+      url: ${MONGO_URI}/blog
   application:
     name: AUTH
       
