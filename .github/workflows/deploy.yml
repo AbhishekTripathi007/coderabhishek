@@ -73,7 +73,7 @@ jobs:
               ["gateway"]="8080"
               ["auth"]="8081"
               ["blog"]="8082"
-              ["react-frontend"]="3000"
+              ["react-frontend"]="80"
             )
 
             echo "🚀 Pulling latest Docker images..."
